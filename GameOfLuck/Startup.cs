@@ -67,7 +67,9 @@ namespace GameOfLuck
             services.AddAutoMapper(configuration =>
             {
                 configuration.CreateMap<Person, PersonDTO>().ReverseMap() ;
+                configuration.CreateMap<Person, NewPersonDTO>().ReverseMap();
                 configuration.CreateMap<GameRound, GameRoundDTO>().ReverseMap();
+
             }, typeof(Startup));
 
             services.AddScoped<IGameRoundService, GameRoundService>();

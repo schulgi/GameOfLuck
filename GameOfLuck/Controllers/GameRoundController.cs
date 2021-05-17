@@ -22,11 +22,13 @@ namespace GameOfLuck.Controllers
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
         private readonly IGameRoundService _gameRoundService;
-        public GameRoundController(ApplicationDbContext context, IMapper mapper, IGameRoundService gameRoundService)
+        private readonly IPersonService _personService;
+        public GameRoundController(ApplicationDbContext context, IMapper mapper, IGameRoundService gameRoundService, IPersonService personService)
         {
             this.context = context;
             this.mapper = mapper;
             _gameRoundService = gameRoundService;
+            _personService = personService;
         }
 
         [HttpGet("")]
@@ -56,7 +58,6 @@ namespace GameOfLuck.Controllers
                     }
 
                     return betresult;
-                    
                 }
                 else
                 {
@@ -69,64 +70,26 @@ namespace GameOfLuck.Controllers
             }
         }
 
-        //[HttpGet("MyGames")]
-        //[Authorize]
-        //public async Task<ActionResult<List<GameRoundDTO>>> GetGames(int numberOfRecords = 5)
-        //{
+     
+        [HttpGet("CurrentPoints")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        public ActionResult<PersonDTO> CurrentPoints()
+        {
 
-        //    var claims = ClaimsPrincipal.Current.Identities.First().Claims.ToList();
+            var claims = User.Claims.ToList();
 
+            string username = claims.FirstOrDefault(x => x.Type == "Username").Value;
 
+            PersonDTO person = _personService.GetPersonByEmail(username);
 
-        //    Person person = context.Persons.FirstOrDefault(x => x.Email == username);
+            if (person == null)
+            {
+                return NotFound();
+            }
 
-        //    List<GameRoundDTO> gameRoundDTOList = new List<GameRoundDTO>();
-
-        //    var gameRoundBool = context.GameRound.Select(x => x.PersonId == person.Id).Take(numberOfRecords).ToList();
-
-        //    if (gameRoundBool == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    gameRoundDTOList = mapper.Map<List<GameRoundDTO>>(gameRoundBool);
-
-        //    return gameRoundDTOList;
-        //}
+            return person;
+        }
 
 
-        //    [HttpPut("{id}")]
-        //    public ActionResult Put(int id, [FromBody] Person value)
-        //    {
-        //        // Esto no es necesario en asp.net core 2.1
-        //        // if (ModelState.IsValid){
-
-        //        // }
-
-        //        if (id != value.Id)
-        //        {
-        //            return BadRequest();
-        //        }
-
-        //        context.Entry(value).State = EntityState.Modified;
-        //        context.SaveChanges();
-        //        return Ok();
-        //    }
-
-        //    [HttpDelete("{id}")]
-        //    public ActionResult<Person> Delete(int id)
-        //    {
-        //        var autor = context.Person.FirstOrDefault(x => x.Id == id);
-
-        //        if (autor == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        context.Person.Remove(autor);
-        //        context.SaveChanges();
-        //        return autor;
-        //    }
-        //}
     }
 }

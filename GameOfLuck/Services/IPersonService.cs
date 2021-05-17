@@ -9,9 +9,9 @@ namespace GameOfLuck.Services
 {
    public interface IPersonService
     {
-        void Create(PersonDTO model);
+        void Create(NewPersonDTO model);
         int AssignInitialPoints();
-        string validateNewUser(PersonDTO person);
+        string validateNewUser(NewPersonDTO person);
         PersonDTO GetPersonByEmail(string email);
        void Update(PersonDTO model);
     }

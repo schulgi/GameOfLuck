@@ -45,7 +45,7 @@ namespace GameOfLuck.Controllers
         }
 
         [HttpPost("Create")]
-        public async Task<ActionResult<UserToken>> CreateUser([FromBody] PersonDTO model)
+        public async Task<ActionResult<UserToken>> CreateUser([FromBody] NewPersonDTO model)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +66,9 @@ namespace GameOfLuck.Controllers
 
                     _personService.Create(model);
 
-                    return BuildToken(model,new List<string>());
+                    PersonDTO person = new PersonDTO { Email = model.Email, Id = model.Id, Name = model.Name, Points = model.Points, Surname = model.Surname };
+
+                    return BuildToken(person, new List<string>());
                 }
                 else
                 {

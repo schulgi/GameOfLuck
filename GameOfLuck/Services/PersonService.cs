@@ -23,7 +23,7 @@ namespace GameOfLuck.Services
         }
 
 
-        public void Create(PersonDTO model)
+        public void Create(NewPersonDTO model)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace GameOfLuck.Services
             return 10000;
         }
 
-        public string validateNewUser(PersonDTO person)
+        public string validateNewUser(NewPersonDTO person)
         {
             string ret = "";
             if (string.IsNullOrEmpty(person.Name))

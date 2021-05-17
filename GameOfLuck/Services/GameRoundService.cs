@@ -2,6 +2,7 @@
 using GameOfLuck.Context;
 using GameOfLuck.Entities;
 using GameOfLuck.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,10 +70,32 @@ namespace GameOfLuck.Services
             game.PersonId = person.Id;
             game.RandomResult = betResultDTO.RandomResult;
             game.Result = betResultDTO.Status == "Won" ? true : false;
+            //game.isResult = betResultDTO.Status == "Won" ? 1 : 0;
             game.Reward = betResultDTO.PointsWon;
 
             context.GameRound.Add(game);
             context.SaveChanges();
+        }
+
+
+        public List<GameRoundDTO> GetRoundByPersonId(string email, int numberOfRecords)
+        {
+            List<GameRoundDTO> ret = new List<GameRoundDTO>();
+            Person person = context.Persons.FirstOrDefault(x => x.Email == email);
+
+            context.Entry(person).State = EntityState.Detached;
+
+            var gameRoundBool = context.GameRound.Where(x => x.PersonId == person.Id).FirstOrDefault();
+
+            if (gameRoundBool != null)
+            {
+                //foreach (var game in gameRoundBool)
+                //{
+                //    ret.Add(mapper.Map<GameRoundDTO>(game));
+                //}
+            }
+
+            return ret;
         }
     }
 }
